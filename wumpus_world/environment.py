@@ -2,25 +2,38 @@ from enum import Enum
 
 
 BOUNCE_PUNISHMENT = -10
+BOARD_ID = 4
 
 class Action(Enum):
     LEFT = 0
     RIGHT = 1
     UP = 2
     DOWN = 3
-"""
-reward_array = [[-1, -1, -1, -1],
+
+reward_array1 = [[-1, -1, -1, -1],
                 [-1000, 1000, -1000, -1],
                 [-1, -1, -1, -1],
                 [-1, -1, -1000, -1]]
-"""
-reward_array = [[-1, -1000, -1, -1000],
+
+reward_array2 = [[-1, -1000, -1, -1000],
                 [-1, -1, -1000, 1000],
                 [-1, -1, -1, -1],
                 [-1, -1, -1000, -1]]
 
-def step(x, y, action):
+reward_array3 = [[-1, -1000, -1, -1],
+                [-1, -1, -1, -1],
+                [-1000, -1, -1, -1000],
+                [-1, 1000, -1, -1]]
 
+reward_array4 = [[-1, -1000, -1, -1],
+                [-1, -1, -1000, -1],
+                [-1000, -1, -1, -1000],
+                [-1, -1000, -1, 1000]]
+
+reward_array_dict = {1: reward_array1, 2: reward_array2, 3: reward_array3, 4: reward_array4}
+
+def step(x, y, action):
+    reward_array = reward_array_dict.get(BOARD_ID)
     next_x, next_y = x, y
     if action == Action.LEFT.value:
         next_x -= 1
