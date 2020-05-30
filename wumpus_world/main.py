@@ -8,7 +8,7 @@ from wumpus_world.environment import Action, step
 def get_action_with_max_value(Q, x, y):
     return Q.argmax(axis=0)[x][y]
 
-def qlearning():
+def qlearning(reward_array):
     print("Started learning...")
     # Setting learning parameters
     number_of_episodes = 20000
@@ -35,7 +35,7 @@ def qlearning():
                 action = random.randrange(num_actions) # get random action
             else:
                 action = get_action_with_max_value(Q, x, y) # get action with highest value in Q for x, y
-            next_x, next_y, reward, end = step(x, y, action) # get next step from environment
+            next_x, next_y, reward, end = step(reward_array, x, y, action) # get next step from environment
             if next_x == last_2_actions[0][0] and next_y == last_2_actions[0][1]: # check if agent is oscillating between 2 fields
                 reward -= 20
             Q[action][x][y] += alpha*(reward + gamma*get_action_with_max_value(Q, next_x, next_y) - Q[action][x][y]) # TD equation
@@ -51,19 +51,20 @@ def qlearning():
 
     return Q
 
-def run(Q):
+def run(reward_array, Q):
     max_steps_number = 20
     x, y = 0, 0
     step_number = 0
     game_ended = False
     sum_of_rewards = 0
+    step_list = []
 
     while not game_ended:
         step_number += 1
         action = get_action_with_max_value(Q, x, y)
-        print(f"x: {x}, y: {y}, action: {Action(action).name}")
-        next_x, next_y, reward, end = step(x, y, action)
-
+        #print(f"x: {x}, y: {y}, action: {Action(action).name}")
+        next_x, next_y, reward, end = step(reward_array, x, y, action)
+        step_list.append((next_x, next_y, Action(action).value))
         x, y = next_x, next_y
         sum_of_rewards += reward
 
@@ -71,6 +72,7 @@ def run(Q):
             game_ended = True
 
     print(f"Score: {sum_of_rewards}")
+    return step_list
 
 if __name__ == "__main__":
     Q = qlearning()
