@@ -2,7 +2,7 @@ import time
 
 import numpy as np
 import random
-from wumpus_world.environment import Action, step
+from wumpus_world.environment import Action, step, size
 
 
 def get_action_with_max_value(Q, x, y):
@@ -11,14 +11,14 @@ def get_action_with_max_value(Q, x, y):
 def qlearning():
     print("Started learning...")
     # Setting learning parameters
-    number_of_episodes = 20000
+    number_of_episodes = 40000
     gamma = 0.9
     alpha = 0.4
-    epsilon = 0.4
+    epsilon = 0.6
     max_steps_number = 40
 
     num_actions = len([action.value for action in Action])
-    Q = np.zeros((num_actions, 4, 4))
+    Q = np.zeros((num_actions, size+1, size+1))
     sum_of_rewards = np.zeros(number_of_episodes)
 
     for episode in range(number_of_episodes):
